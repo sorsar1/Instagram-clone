@@ -43,7 +43,8 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
         btnLogIn = findViewById(R.id.btnLogIn);
         btnSignUp = findViewById(R.id.btnSignUp);
         if (ParseUser.getCurrentUser() != null){
-            ParseUser.getCurrentUser().logOut();
+//            ParseUser.getCurrentUser().logOut();
+            transitionToSocialActivity();
         }
         btnLogIn.setOnClickListener(this);
         btnSignUp.setOnClickListener(this);
@@ -67,7 +68,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
                         user.setUsername(edtUserName.getText().toString());
                         user.setPassword(edtPassword.getText().toString());
                         final ProgressDialog progressDialog = new ProgressDialog(SignUp.this);
-                        progressDialog.setMessage("Signing Up" + user.getUsername());
+                        progressDialog.setMessage("Signing Up " + user.getUsername());
                         progressDialog.show();
                         user.signUpInBackground(new SignUpCallback() {
                             @Override
@@ -75,6 +76,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
                                 if (e == null) {
                                     FancyToast.makeText(SignUp.this, user.getUsername() + " is signed up successfully",
                                             FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
+                                    transitionToSocialActivity();
                                 } else {
                                     FancyToast.makeText(SignUp.this, e.getMessage(), FancyToast.LENGTH_SHORT, FancyToast.ERROR, false).show();
                                 }
@@ -97,6 +99,9 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
         }catch (Exception e) {
             e.printStackTrace();
         }
-
+    }
+    private void transitionToSocialActivity(){
+        Intent intent = new Intent(SignUp.this,SocialMediaActivity.class);
+        startActivity(intent);
     }
 }

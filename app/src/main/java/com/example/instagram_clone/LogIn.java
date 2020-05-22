@@ -2,6 +2,7 @@ package com.example.instagram_clone;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -28,7 +29,8 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.activity_log_in);
         setTitle("Log in");
         if (ParseUser.getCurrentUser() != null){
-            ParseUser.getCurrentUser().logOut();
+         //   ParseUser.getCurrentUser().logOut();
+            transitionToSocialActivity();
         }
         edtEmail = findViewById(R.id.edtEmailLogIn);
         edtPassword = findViewById(R.id.edtPasswordLogIn);
@@ -67,6 +69,7 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
                                             public void done(ParseUser user, ParseException e) {
                                                 if (e == null && user != null) {
                                                     FancyToast.makeText(LogIn.this,user.getUsername()+" is logged In",FancyToast.LENGTH_SHORT,FancyToast.SUCCESS,false).show();
+                                                    transitionToSocialActivity();
                                                 }else {
                                                     FancyToast.makeText(LogIn.this,e.getMessage(),FancyToast.LENGTH_SHORT,FancyToast.ERROR,false).show();
                                                 }
@@ -95,5 +98,9 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
         }catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    private void transitionToSocialActivity(){
+        Intent intent = new Intent(LogIn.this,SocialMediaActivity.class);
+        startActivity(intent);
     }
 }
