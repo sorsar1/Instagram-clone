@@ -3,7 +3,9 @@ package com.example.instagram_clone;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.parse.FindCallback;
@@ -16,7 +18,7 @@ import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.util.List;
 
-public class LogIn extends AppCompatActivity {
+public class LogIn extends AppCompatActivity implements View.OnClickListener {
     private EditText edtEmail,edtPassword;
     private String userName;
 
@@ -24,12 +26,32 @@ public class LogIn extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
+        setTitle("Log in");
+        if (ParseUser.getCurrentUser() != null){
+            ParseUser.getCurrentUser().logOut();
+        }
         edtEmail = findViewById(R.id.edtEmailLogIn);
         edtPassword = findViewById(R.id.edtPasswordLogIn);
-        userName = "";
-        findViewById(R.id.btnLogIn2).setOnClickListener(new View.OnClickListener() {
+        edtPassword.setOnKeyListener(new View.OnKeyListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN){
+                    onClick(findViewById(R.id.btnLogIn2));
+                }
+                return false;
+            }
+
+
+        });
+        userName = "";
+        findViewById(R.id.btnLogIn2).setOnClickListener(this);
+        findViewById(R.id.btnSignUp2).setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnLogIn2:
                 try {
                     ParseQuery<ParseUser> parseQuery = ParseUser.getQuery();
                     parseQuery.whereEqualTo("email",edtEmail.getText().toString());
@@ -60,13 +82,18 @@ public class LogIn extends AppCompatActivity {
                 }catch (Exception e){
                     FancyToast.makeText(LogIn.this,e.getMessage(),FancyToast.LENGTH_SHORT,FancyToast.ERROR,false).show();
                 }
-            }
-        });
-        findViewById(R.id.btnSignUp2).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                break;
+            case R.id.btnSignUp2:
                 finish();
-            }
-        });
+                break;
+        }
+    }
+    public void layoutTapped(View view) {
+        try {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
