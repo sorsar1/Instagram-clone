@@ -87,6 +87,8 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
                 }
                 break;
             case R.id.btnSignUp2:
+                Intent intent = new Intent(LogIn.this,SignUp.class);
+                startActivity(intent);
                 finish();
                 break;
         }
@@ -102,5 +104,6 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
     private void transitionToSocialActivity(){
         Intent intent = new Intent(LogIn.this,SocialMediaActivity.class);
         startActivity(intent);
+        finish();
     }
 }

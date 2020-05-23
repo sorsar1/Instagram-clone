@@ -56,6 +56,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
             case R.id.btnLogIn :
                 Intent intent = new Intent(SignUp.this,LogIn.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.btnSignUp :
                 if (edtEmail.getText().toString().equals("") || edtUserName.getText().toString().equals("") ||
@@ -103,5 +104,6 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
     private void transitionToSocialActivity(){
         Intent intent = new Intent(SignUp.this,SocialMediaActivity.class);
         startActivity(intent);
+        finish();
     }
 }
