@@ -48,7 +48,7 @@ public class SharePictureTab extends Fragment implements View.OnClickListener {
     private ImageView imgShare;
     private EditText edtDescription;
     private Button btnShareImage;
-    Bitmap receivedImageBitmap;
+    Bitmap bitmap;
 
     public SharePictureTab() {
         // Required empty public constructor
@@ -81,13 +81,13 @@ public class SharePictureTab extends Fragment implements View.OnClickListener {
                 }
                 break;
             case R.id.btnShareImage:
-                if (receivedImageBitmap != null) {
+                if (bitmap != null) {
                     if (edtDescription.getText().toString().equals("")) {
                         FancyToast.makeText(getContext(),"Error: you must specify a description",
                                 Toast.LENGTH_SHORT,FancyToast.ERROR,true).show();
                     }else {
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        receivedImageBitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
+                        bitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
                         byte[] bytes = byteArrayOutputStream.toByteArray();
                         ParseFile parseFile = new ParseFile("img.png",bytes);
                         ParseObject parseObject = new ParseObject("Photo");
@@ -141,16 +141,19 @@ public class SharePictureTab extends Fragment implements View.OnClickListener {
         if (requestCode == 2000) {
             if (resultCode == Activity.RESULT_OK) {
                 try {
+//                    Uri selectedImage = data.getData();
+//                    String[] filePathColumn = { MediaStore.Images.Media.DATA };
+//                    Cursor cursor = getActivity().getContentResolver().query(selectedImage,
+//                            filePathColumn,null,null,null);
+//                    cursor.moveToFirst();
+//                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//                    String picturePath = cursor.getString(columnIndex);
+//                    cursor.close();
+//                    receivedImageBitmap = BitmapFactory.decodeFile(picturePath);
+//                    imgShare.setImageBitmap(receivedImageBitmap);
                     Uri selectedImage = data.getData();
-                    String[] filePathColumn = { MediaStore.Images.Media.DATA };
-                    Cursor cursor = getActivity().getContentResolver().query(selectedImage,
-                            filePathColumn,null,null,null);
-                    cursor.moveToFirst();
-                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                    String picturePath = cursor.getString(columnIndex);
-                    cursor.close();
-                    receivedImageBitmap = BitmapFactory.decodeFile(picturePath);
-                    imgShare.setImageBitmap(receivedImageBitmap);
+                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(),selectedImage);
+                    imgShare.setImageBitmap(bitmap);
                 }catch (Exception e) {
                     e.printStackTrace();
                 }
